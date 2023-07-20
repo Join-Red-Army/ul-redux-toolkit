@@ -1,23 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { useAppDispatch, useAppSelector } from './hooks/redux';
+import { userSlice } from './store/reducers/UserSlice';
 
 function App() {
+  
+  // получить значение из state
+  const count = useAppSelector(state => state.userReducer.count);
+  
+  // типизированный dispatch
+  const dispatch = useAppDispatch();
+
+  // получить функцию action
+  const increment = userSlice.actions.increment;
+
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+        
+        <h1>{ count }</h1>
+
+        <button 
+          onClick={ () => dispatch(increment(10))}
         >
-          Learn React
-        </a>
+          прибавить
+        </button>
+
       </header>
     </div>
   );
