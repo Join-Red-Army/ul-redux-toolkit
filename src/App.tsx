@@ -1,31 +1,34 @@
-import './App.css';
-import { useAppDispatch, useAppSelector } from './hooks/redux';
-import { userSlice } from './store/reducers/UserSlice';
+import './App.css'
+import { useEffect } from 'react'
+import { useAppDispatch, useAppSelector } from './hooks/redux'
+import { fetchUsers } from './store/reducers/ActionCreators';
 
 function App() {
-  
+
   // получить значение из state
-  const count = useAppSelector(state => state.userReducer.count);
+  const { users, isLoading, error } = useAppSelector(state => state.userReducer);
   
   // типизированный dispatch
   const dispatch = useAppDispatch();
 
-  // получить функцию action
-  const increment = userSlice.actions.increment;
-
+  // на старте выполнить сетевой запрос
+  useEffect(
+    () => { dispatch(fetchUsers())}, 
+    []
+  )
 
   return (
     <div className="App">
       <header className="App-header">
-        
-        <h1>{ count }</h1>
+        <div>
 
-        <button 
-          onClick={ () => dispatch(increment(10))}
-        >
-          прибавить
-        </button>
+          <pre>
+            { isLoading ? <h1>Идёт загрузка</h1> : null }
+            { error ? <h1>{ error }</h1> : null }
+            { JSON.stringify(users, null, 2) }
+          </pre>
 
+        </div>
       </header>
     </div>
   );

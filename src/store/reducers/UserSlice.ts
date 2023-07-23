@@ -5,17 +5,15 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 // типизация стейта в этом slice
 interface UserState {
   users: IUser[]
-  isLoading: false
+  isLoading: boolean
   error: string
-  count: number
 }
 
 // дефольный state
 const initialState: UserState = {
   users: [],
   isLoading: false,
-  error: '',
-  count: 0
+  error: ''
 }
 
 // slice
@@ -24,10 +22,23 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
 
-    increment(state, action: PayloadAction<number>) {
-      state.count += action.payload;
-    }
+    // сетевой запрос начался
+    usersFetching(state) {
+      state.isLoading = true;
+    },
+    
+    // сетевой запрос выполнен корректно
+    usersFetchingSuccess(state, action: PayloadAction<IUser[]>) {
+      state.isLoading = false;
+      state.error = '';            // ошибка обнуляется
+      state.users = action.payload;
+    },
 
+    // сетевой запрос завершён с ошибкой
+    usersFetchingError(state, action: PayloadAction<string>) {
+      state.isLoading = false;
+      state.error = action.payload // сообщение об ошибке
+    }
   }
 });
 
