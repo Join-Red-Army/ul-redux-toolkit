@@ -1,5 +1,6 @@
 import { IUser } from '../../models/IUser'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import { fetchUsers } from './ActionCreators'
 
 
 // типизация стейта в этом slice
@@ -20,26 +21,47 @@ const initialState: UserState = {
 export const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {
+  reducers: {}, // поле должно остаться, даже если оно пустое
+  
+  extraReducers: {
 
-    // сетевой запрос начался
-    usersFetching(state) {
-      state.isLoading = true;
-    },
-    
-    // сетевой запрос выполнен корректно
-    usersFetchingSuccess(state, action: PayloadAction<IUser[]>) {
+    [fetchUsers.fulfilled.type]: (state, action: PayloadAction<IUser[]>) => {
       state.isLoading = false;
       state.error = '';            // ошибка обнуляется
       state.users = action.payload;
     },
 
-    // сетевой запрос завершён с ошибкой
-    usersFetchingError(state, action: PayloadAction<string>) {
+    [fetchUsers.pending.type]: (state) => {
+      state.isLoading = true;
+    },
+
+    [fetchUsers.rejected.type]: (state, action: PayloadAction<string>) => {
       state.isLoading = false;
       state.error = action.payload // сообщение об ошибке
     }
+
   }
+
+  // предыдущая реализация
+  // reducers: {
+  //   // сетевой запрос начался
+  //   usersFetching(state) {
+  //     state.isLoading = true;
+  //   },
+    
+  //   // сетевой запрос выполнен корректно
+  //   usersFetchingSuccess(state, action: PayloadAction<IUser[]>) {
+  //     state.isLoading = false;
+  //     state.error = '';            // ошибка обнуляется
+  //     state.users = action.payload;
+  //   },
+
+  //   // сетевой запрос завершён с ошибкой
+  //   usersFetchingError(state, action: PayloadAction<string>) {
+  //     state.isLoading = false;
+  //     state.error = action.payload // сообщение об ошибке
+  //   }
+  // }
 });
 
 
