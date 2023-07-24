@@ -4,8 +4,8 @@ import type { IPost } from '../models/IPost'
 export const postAPI = createApi({
   reducerPath: 'postAPI',
     
-  baseQuery: fetchBaseQuery({ baseUrl: 'https://jsonplaceholder.typicode.com' }),
-    
+  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000' }),
+
   endpoints: (build) => ({
       fetchAllPosts: build.query<IPost[], number>({ 
           // <IPost[], number> number - аргумент "limit", который ожидает query
